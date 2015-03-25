@@ -1,5 +1,9 @@
 package site;
 
-public interface SiteItf {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
+public interface SiteItf extends Remote{
+
+	public void propager() throws RemoteException;
 }
