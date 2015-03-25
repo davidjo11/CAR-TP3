@@ -1,6 +1,5 @@
-package rmi;
+package site;
 
 public interface SiteItf {
 
-	
 }
