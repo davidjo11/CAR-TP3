@@ -1,0 +1,19 @@
+BINÔME: VERBAERE - JOSIAS
+
+Notes:
+- 1 serveur = 1 terminal.
+
+Pour lancer les serveurs une fois dans le répertoire bin, tapez:
+
+	java site.main.Serveur -classpath ../lib:. [port] [name] [portPere]
+
+	- port (obligatoire)  : le port associé au site;
+	- name (obligatoire)  : le nom du site;
+	- portPere (optionnel): le port du site pere.
+
+Pour lancer le client, tapez:
+	
+	java -classpath ../lib:. [port] [message]
+
+	- port  (obligatoire): le port du site à partir duquel vous voulez envoyer le message
+	- message (optionnel): le message à propager.

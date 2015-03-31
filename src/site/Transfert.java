@@ -2,9 +2,9 @@ package site;
 
 public class Transfert extends Thread{
 
-	private SiteImpl pere, fils;
+	private SiteItf pere, fils;
 	
-	public Transfert(SiteImpl pere, SiteImpl fils){
+	public Transfert(SiteItf pere, SiteItf fils){
 		this.pere = pere;
 		this.fils = fils;
 	}
@@ -12,7 +12,7 @@ public class Transfert extends Thread{
 	public void run(){
 		try{
 			this.fils.setData(this.pere.getData());
-			System.out.println(this.pere.getId() + " vers son fils "+this.fils.getId()+" de "+new String(this.pere.getData())+".");
+			System.out.println("Trnasfert de " + this.pere.getId() + " vers son fils: "+this.fils.getId()+" du message:\n"+new String(this.pere.getData())+".");
 			this.fils.propager();
 		}catch(Exception e){
 			e.printStackTrace();

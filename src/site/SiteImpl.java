@@ -2,36 +2,47 @@ package site;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 
-	private static int cpt = 1;
+	//voir rmi registry
+	private List<SiteItf> children;
 	
-	private int id;
+	private String id;
 	
-	private SiteImpl pere, fils[];
+	private SiteItf pere;
 	
 	private byte[] data;
 	
-	public SiteImpl() throws RemoteException{}
-	
-	public void setFils(SiteImpl[] fils){
-		this.fils = fils;
+	public SiteImpl() throws RemoteException{
+		this.children = new ArrayList<SiteItf>();
 	}
 	
-	public void setPere(SiteImpl pere){
+	public SiteImpl(String id) throws RemoteException{
+		this.children = new ArrayList<SiteItf>();
+		this.id = id;
+	}
+	
+	public void ajouterFils(SiteItf fils) throws RemoteException{
+		this.children.add(fils);
+	}
+	
+	public void setPere(SiteItf pere) throws RemoteException{
 		this.pere = pere;
 	}
 	
-	public void setId(){
-		this.id = cpt++;
+	public void setId(String id){
+		this.id = id;
 	}
 	
-	public int getId(){
+	public String getId()throws RemoteException{
 		return this.id;
 	}
 	
-	public byte[] getData(){
+	public byte[] getData() throws RemoteException{
 		return this.data;
 	}
 	
@@ -41,17 +52,19 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	
 	public void propager() throws RemoteException{
 		try{
-			Transfert[] tFils = new Transfert[this.fils.length];
+			int i = 0;
+			Transfert[] tFils = new Transfert[this.children.size()];
 			
-			for(int i=0; i<this.fils.length;i++){
-				tFils[i] = new Transfert(this, this.fils[i]);
-			}
+			Iterator<SiteItf> it = this.children.iterator();
 			
-			for(int i=0; i<this.fils.length;i++){
+			while(it.hasNext())
+				tFils[i++] = new Transfert(this, it.next());
+			
+			for(i=0; i<this.children.size();i++){
 				tFils[i].start();
 			}
 			
-			for(int i=0; i<this.fils.length;i++){
+			for(i=0; i<this.children.size();i++){
 				tFils[i].join();
 			}
 			System.out.println("Propagation vers les fils terminée.");
@@ -65,7 +78,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	
 	public static void main(String[] args){
 		try{
-			SiteImpl root = new SiteImpl();
+			/*SiteImpl root = new SiteImpl();
 			root.setId();
 			
 			SiteImpl s2 = new SiteImpl();
@@ -90,7 +103,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 			root.setFils(new SiteImpl[]{s2, s5});
 			
 			root.setData("le fameux message".getBytes());
-			root.propager();
+			root.propager();*/
 		}catch(Exception e){
 			e.printStackTrace();
 		}
