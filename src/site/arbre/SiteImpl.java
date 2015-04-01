@@ -1,4 +1,4 @@
-package site;
+package site.arbre;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

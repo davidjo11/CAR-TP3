@@ -1,9 +1,9 @@
-package site.main;
+package site.arbre.client;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import site.SiteItf;
+import site.arbre.SiteItf;
 import site.utils.Tools;
 
 public class Client {

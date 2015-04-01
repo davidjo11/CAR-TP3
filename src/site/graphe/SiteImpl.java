@@ -55,30 +55,31 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 
 	public void propager() throws RemoteException{
 		try{
-			this.visited = true;
+			if(!visited){
+				this.visited = true;
 
-			int i = 0;
-			Transfert[] tFils = new Transfert[this.voisins.size()];
+				int i = 0;
+				Transfert[] tFils = new Transfert[this.voisins.size()];
 
-			Iterator<SiteItf> it = this.voisins.iterator();
+				Iterator<SiteItf> it = this.voisins.iterator();
 
-			while(it.hasNext()){
-				SiteItf s = it.next();
-				tFils[i++] = (!s.isVisited()) ? new Transfert(this, s) : null;
+				while(it.hasNext()){
+					SiteItf s = it.next();
+					tFils[i++] = (!s.isVisited()) ? new Transfert(this, s) : null;
+				}
+
+				for(i=0; i<this.voisins.size();i++){
+					if(tFils[i] != null)
+						tFils[i].start();
+				}
+
+				for(i=0; i<this.voisins.size();i++){
+					if(tFils[i] != null)
+						tFils[i].join();
+				}
+
+				System.out.println("Propagation vers les voisins terminée.");
 			}
-
-			for(i=0; i<this.voisins.size();i++){
-				if(tFils[i] != null)
-					tFils[i].start();
-			}
-
-			for(i=0; i<this.voisins.size();i++){
-				if(tFils[i] != null)
-					tFils[i].join();
-			}
-			
-			System.out.println("Propagation vers les voisins terminée.");
-			
 		}catch(NullPointerException e){
 			System.out.println(this.id +" n'a aucun voisin.");
 		}catch(Exception e){

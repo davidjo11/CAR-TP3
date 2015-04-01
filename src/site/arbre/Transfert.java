@@ -1,4 +1,4 @@
-package site;
+package site.arbre;
 
 public class Transfert extends Thread{
 
@@ -12,7 +12,7 @@ public class Transfert extends Thread{
 	public void run(){
 		try{
 			this.fils.setData(this.pere.getData());
-			System.out.println("Trnasfert de " + this.pere.getId() + " vers son fils: "+this.fils.getId()+" du message:\n"+new String(this.pere.getData())+".");
+			System.out.println("Transfert de " + this.pere.getId() + " vers son fils: "+this.fils.getId()+" du message:\n"+new String(this.pere.getData())+".");
 			this.fils.propager();
 		}catch(Exception e){
 			e.printStackTrace();

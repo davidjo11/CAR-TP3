@@ -1,10 +1,10 @@
-package site.main;
+package site.arbre.serveur;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import site.SiteImpl;
-import site.SiteItf;
+import site.arbre.SiteImpl;
+import site.arbre.SiteItf;
 import site.utils.Tools;
 
 public class Serveur {
