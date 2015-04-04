@@ -105,7 +105,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	public void propagerMessageAuxVoisins(byte[] donnees) throws RemoteException{
 		List<Transfert> transferts = new ArrayList<Transfert>();
 		
-		System.out.println("Le site n° " + id + " a reçu le message \n\""+ new String(donnees) + "\"");
+		System.out.println(id + " a reçu le message \n\""+ new String(donnees));
 		this.visited = true;
 		
 		
