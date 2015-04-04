@@ -8,7 +8,7 @@ package site.graphe;
 public class Transfert extends Thread{
 
 	// Le site qui doit recevoir le message et celui qui l'envoi
-	private SiteItf envoyeur;
+	private SiteItf recepteur;
 	// Le message a envoyer
 	private byte[] le_message;
 	
@@ -18,8 +18,8 @@ public class Transfert extends Thread{
 	 * @param pere le site source
 	 * @param fils le site destination
 	 */
-	public Transfert(byte[] data,SiteItf pere){
-		this.envoyeur = pere;
+	public Transfert(byte[] data,SiteItf recepteur){
+		this.recepteur = recepteur;
 		this.le_message = data;
 
 	}
@@ -30,7 +30,7 @@ public class Transfert extends Thread{
 	public void run(){
 		
 		try{
-			this.envoyeur.envoyerMessage(this.le_message);
+			this.recepteur.envoyerMessage(this.le_message);
 		}
 		catch(Exception e){
 			e.printStackTrace();

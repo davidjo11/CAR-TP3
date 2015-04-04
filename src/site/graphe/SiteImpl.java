@@ -3,7 +3,6 @@ package site.graphe;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -97,18 +96,24 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	
 	public void envoyerMessage(byte[] donnees) throws RemoteException {
 		synchronized(this) {
-		if(!this.visited)
-			this.propagerMessageAuxVoisins(donnees);
+			if(!this.visited) {
+				
+				this.visited = true;
+				this.data = donnees;
+				
+				System.out.println(this.id + " a reçu le message : "+ new String(donnees));
+				
+				this.propagerMessageAuxVoisins(donnees);
+			}
+			else {
+				return;
+			}
 		}
 	}
 	
 	public void propagerMessageAuxVoisins(byte[] donnees) throws RemoteException{
 		List<Transfert> transferts = new ArrayList<Transfert>();
-		
-		System.out.println(id + " a reçu le message \n\""+ new String(donnees));
-		this.visited = true;
-		
-		
+				
 		synchronized(this.voisins) {
 			for (int i=0; i < this.voisins.size(); i++) {
 				Transfert transf = new Transfert(donnees,this.voisins.get(i));
@@ -116,20 +121,15 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 				transf.start();
 			}
 		}
-		
-		Iterator<Transfert> it = transferts.iterator();
-		
-		synchronized(it) {
-			while(it.hasNext()) {
-				Transfert transf = it.next();
+			for (int i=0; i < this.voisins.size(); i++) {
 				try {
-					transf.join();
+					transferts.get(i).join();
 				} catch (InterruptedException e) {
 					System.out.println("Le thread a été interrompu.");
 				}
 
 			}
-		}
+		//}
 	}
 
 
