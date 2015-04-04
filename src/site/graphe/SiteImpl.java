@@ -95,19 +95,19 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 
 	
 	public void envoyerMessage(byte[] donnees) throws RemoteException {
-		synchronized(this) {
-			if(!this.visited) {
+		if(!this.visited) {
 				
-				this.visited = true;
-				this.data = donnees;
+			this.visited = true;
+			this.data = donnees;
 				
-				System.out.println(this.id + " a reçu le message : "+ new String(donnees));
-				
+			System.out.println(this.id + " a reçu le message : "+ new String(donnees));
+			synchronized(this) {
 				this.propagerMessageAuxVoisins(donnees);
 			}
-			else {
+			System.out.println("Fin des envois aux voisins.");
+		}
+		else {
 				return;
-			}
 		}
 	}
 	
@@ -120,8 +120,8 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 				transferts.add(transf);
 				transf.start();
 			}
-		}
-			for (int i=0; i < this.voisins.size(); i++) {
+
+			for (int i=0; i < transferts.size(); i++) {
 				try {
 					transferts.get(i).join();
 				} catch (InterruptedException e) {
@@ -129,7 +129,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 				}
 
 			}
-		//}
+		}
 	}
 
 
