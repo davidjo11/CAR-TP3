@@ -6,6 +6,11 @@ import java.rmi.registry.Registry;
 import site.graphe.SiteItf;
 import site.utils.Tools;
 
+/**
+ * Créé un client RMI.
+ * @author David JOSIAS et Thibaud VERBAERE
+ *
+ */
 public class Client {
 
 	/*
@@ -14,7 +19,6 @@ public class Client {
 	 * 2 - (optionnel) le message à propager
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		try{
 			int port;
@@ -39,6 +43,8 @@ public class Client {
 			SiteItf s = (SiteItf) registry.lookup(Tools.SITE_NAME);
 
 			s.envoyerMessage(message.getBytes());
+			
+			s.reset();
 
 		}catch(Exception e){
 			e.printStackTrace();

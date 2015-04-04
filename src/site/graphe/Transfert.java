@@ -1,7 +1,7 @@
 package site.graphe;
 
 /**
- * 
+ * Thread de transfert.
  * @author David JOSIAS et Thibaud VERBAERE
  *
  */

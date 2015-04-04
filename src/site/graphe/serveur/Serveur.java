@@ -7,16 +7,20 @@ import site.graphe.SiteImpl;
 import site.graphe.SiteItf;
 import site.utils.Tools;
 
+/**
+ * Créé un serveur RMI.
+ * @author David JOSIAS et Thibaud VERBAERE
+ *
+ */
 public class Serveur {
 
 	/*
 	 * Paramètres possibles:
 	 * 1 - (OBLIGATOIRE) le numéro de port du serveur 
 	 * 2 - (OBLIGATOIRE) le nom du site 
-	 * 3 - (optionnel) les numéros des ports voisins (entre guillements séparés par des virgules, Ex: 4001,4004,56132,6541,65156)
+	 * 3 - (optionnel) les numéros des ports voisins (séparés par des virgules, Ex: 4001,4004,56132,6541,65156)
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		try{
 			int port = Integer.parseInt(args[0]);
