@@ -42,6 +42,7 @@ public class Serveur {
 					SiteItf voisin = (SiteItf) registry.lookup(Tools.SITE_NAME);
 
 					voisin.ajouterVoisin(site);
+					site.ajouterVoisin(voisin);
 				}
 			}
 

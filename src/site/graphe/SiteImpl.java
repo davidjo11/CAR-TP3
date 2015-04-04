@@ -56,7 +56,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	 */
 	public void ajouterVoisin(SiteItf voisin) throws RemoteException{
 		this.voisins.add(voisin);
-		voisin.ajouterVoisin((SiteItf) this);
+		//voisin.ajouterVoisin(this);
 	}
 
 	/**
