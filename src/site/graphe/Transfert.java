@@ -1,20 +1,38 @@
 package site.graphe;
 
+/**
+ * 
+ * @author David JOSIAS et Thibaud VERBAERE
+ *
+ */
 public class Transfert extends Thread{
 
-	private SiteItf pere, fils;
+	// Le site qui doit recevoir le message et celui qui l'envoi
+	private SiteItf envoyeur;
+	// Le message a envoyer
+	private byte[] le_message;
 	
-	public Transfert(SiteItf pere, SiteItf fils){
-		this.pere = pere;
-		this.fils = fils;
+	/**
+	 * Constructeur
+	 * @param data le message a envoyer.
+	 * @param pere le site source
+	 * @param fils le site destination
+	 */
+	public Transfert(byte[] data,SiteItf pere){
+		this.envoyeur = pere;
+		this.le_message = data;
+
 	}
 	
+	/**
+	 * Lancement du transfert.
+	 */
 	public void run(){
+		
 		try{
-			this.fils.setData(this.pere.getData());
-			System.out.println("Transfert de " + this.pere.getId() + " vers son fils: "+this.fils.getId()+" du message:\n"+new String(this.pere.getData())+".");
-			this.fils.propager();
-		}catch(Exception e){
+			this.envoyeur.envoyerMessage(this.le_message);
+		}
+		catch(Exception e){
 			e.printStackTrace();
 		}
 	}

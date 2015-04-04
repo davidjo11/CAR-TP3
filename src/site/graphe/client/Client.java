@@ -38,9 +38,7 @@ public class Client {
 
 			SiteItf s = (SiteItf) registry.lookup(Tools.SITE_NAME);
 
-			s.setData(message.getBytes());
-
-			s.propager();
+			s.envoyerMessage(message.getBytes());
 
 		}catch(Exception e){
 			e.printStackTrace();

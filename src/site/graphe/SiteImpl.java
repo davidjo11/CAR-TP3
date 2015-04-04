@@ -6,120 +6,131 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
+/**
+ * 
+ * @author David JOSIAS et Thibaud VERBAERE
+ *
+ */
+@SuppressWarnings("serial")
 public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 
-	//voir rmi registry
+	private static final String ID_DEFAULT = "Site by Default";
+	
+	// Sites reliés au site actuel
 	private List<SiteItf> voisins;
-
+	// ID du site actuel
 	private String id;
-
+	// True : le site a déja reçu le message, False sinon
 	private boolean visited;
-
+	// Message reçu
 	private byte[] data;
 
+	/**
+	 * Constructeur pour un site par défaut.
+	 * @throws RemoteException
+	 */
 	public SiteImpl() throws RemoteException{
+		super();
 		this.voisins = new ArrayList<SiteItf>();
 		this.visited = false;
+		this.id = ID_DEFAULT;
 	}
 
+	/**
+	 * Constructeur pour un site avec un identifiant spécifique.
+	 * @param id l'identifiant du site à créer
+	 * @throws RemoteException
+	 */
 	public SiteImpl(String id) throws RemoteException{
+		super();
 		this.voisins = new ArrayList<SiteItf>();
 		this.visited = false;
 		this.id = id;
 	}
 
+	/**
+	 * Ajoute un lien entre le site actuel et un autre site spécifié.
+	 * @param voisin le site a connecter au site actuel
+	 */
 	public void ajouterVoisin(SiteItf voisin) throws RemoteException{
 		this.voisins.add(voisin);
 		voisin.ajouterVoisin((SiteItf) this);
 	}
 
+	/**
+	 * Modifie l'identifiant du site actuel.
+	 * @param id le nouvel identifiant.
+	 */
 	public void setId(String id){
 		this.id = id;
 	}
 
+	/**
+	 * Retourne l'identifiant du site actuel.
+	 */
 	public String getId()throws RemoteException{
 		return this.id;
 	}
 
+	/**
+	 * Retourne le message reçu par le site actuel.
+	 */
 	public byte[] getData() throws RemoteException{
 		return this.data;
 	}
 
+	/**
+	 * Modifie le message reçu par le site actuel.
+	 */
 	public void setData(byte[] data){
 		this.data = data;
 	}
 
+	/**
+	 * Teste si le site a été visité.
+	 */
 	public boolean isVisited() throws RemoteException{
 		return this.visited;
 	}
 
-	public void propager() throws RemoteException{
-		try{
-			if(!visited){
-				this.visited = true;
-
-				int i = 0;
-				Transfert[] tFils = new Transfert[this.voisins.size()];
-
-				Iterator<SiteItf> it = this.voisins.iterator();
-
-				while(it.hasNext()){
-					SiteItf s = it.next();
-					tFils[i++] = (!s.isVisited()) ? new Transfert(this, s) : null;
-				}
-
-				for(i=0; i<this.voisins.size();i++){
-					if(tFils[i] != null)
-						tFils[i].start();
-				}
-
-				for(i=0; i<this.voisins.size();i++){
-					if(tFils[i] != null)
-						tFils[i].join();
-				}
-
-				System.out.println("Propagation vers les voisins terminée.");
+	
+	public void envoyerMessage(byte[] donnees) throws RemoteException {
+		synchronized(this) {
+		if(!this.visited)
+			this.propagerMessageAuxVoisins(donnees);
+		}
+	}
+	
+	public void propagerMessageAuxVoisins(byte[] donnees) throws RemoteException{
+		List<Transfert> transferts = new ArrayList<Transfert>();
+		
+		System.out.println("Le site n° " + id + " a reçu le message \n\""+ new String(donnees) + "\"");
+		this.visited = true;
+		
+		
+		synchronized(this.voisins) {
+			for (int i=0; i < this.voisins.size(); i++) {
+				Transfert transf = new Transfert(donnees,this.voisins.get(i));
+				transferts.add(transf);
+				transf.start();
 			}
-		}catch(NullPointerException e){
-			System.out.println(this.id +" n'a aucun voisin.");
-		}catch(Exception e){
-			e.printStackTrace();
 		}
+		
+		Iterator<Transfert> it = transferts.iterator();
+		
+		synchronized(it) {
+			while(it.hasNext()) {
+				Transfert transf = it.next();
+				try {
+					transf.join();
+				} catch (InterruptedException e) {
+					System.out.println("Le thread a été interrompu.");
+				}
 
+			}
+		}
 	}
 
-	public static void main(String[] args){
-		try{
-			/*SiteImpl root = new SiteImpl();
-			root.setId();
 
-			SiteImpl s2 = new SiteImpl();
-			s2.setId();
-
-			SiteImpl s3 = new SiteImpl();
-			s3.setId();
-
-			SiteImpl s4 = new SiteImpl();
-			s4.setId();
-
-			SiteImpl s5 = new SiteImpl();
-			s5.setId();
-
-			SiteImpl s6 = new SiteImpl();
-			s6.setId();
-
-			s5.setFils(new SiteImpl[]{s6});
-
-			s2.setFils(new SiteImpl[]{s3, s4});
-
-			root.setFils(new SiteImpl[]{s2, s5});
-
-			root.setData("le fameux message".getBytes());
-			root.propager();*/
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-
-
-	}
 }
