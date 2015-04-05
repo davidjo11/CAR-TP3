@@ -6,108 +6,121 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import site.utils.TransfertException;
+
+/**
+ * Classe de création de Site (pour un arbre).
+ * @author David JOSIAS et Thibaud VERBAERE
+ *
+ */
+@SuppressWarnings("serial")
 public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 
-	//voir rmi registry
+	private static final String ID_DEFAULT = "Site by Default";
+	
 	private List<SiteItf> children;
 	
 	private String id;
 	
+	@SuppressWarnings("unused")
 	private SiteItf pere;
 	
 	private byte[] data;
 	
+	/**
+	 * Constructeur pour un site par défaut.
+	 * @throws RemoteException
+	 */
 	public SiteImpl() throws RemoteException{
+		super();
 		this.children = new ArrayList<SiteItf>();
+		this.id = ID_DEFAULT;
 	}
 	
+	
+	/**
+	 * Constructeur pour un site avec un identifiant spécifique.
+	 * @param id l'identifiant du site à créer
+	 * @throws RemoteException
+	 */
 	public SiteImpl(String id) throws RemoteException{
+		super();
 		this.children = new ArrayList<SiteItf>();
 		this.id = id;
 	}
 	
+	/**
+	 * Ajoute un fils au site actuel.
+	 * @param fils le site a connecter au site actuel
+	 */
 	public void ajouterFils(SiteItf fils) throws RemoteException{
 		this.children.add(fils);
 	}
 	
+	/**
+	 * Fixe le père du site actuel.
+	 * @param message
+	 * @throws RemoteException
+	 */
 	public void setPere(SiteItf pere) throws RemoteException{
 		this.pere = pere;
 	}
 	
-	public void setId(String id){
-		this.id = id;
-	}
 	
+	/**
+	 * Retourne l'identifiant du site actuel.
+	 * @throws RemoteException
+	 */
 	public String getId()throws RemoteException{
 		return this.id;
 	}
 	
+	
+	/**
+	 * Retourne le message reçu par le site actuel.
+	 * @throws RemoteException
+	 */
 	public byte[] getData() throws RemoteException{
 		return this.data;
 	}
 	
-	public void setData(byte[] data){
+	
+	/**
+	 * Modifie le message reçu par le site actuel.
+	 * @throws RemoteException
+	 */
+	public void setData(byte[] data) throws RemoteException {
 		this.data = data;
 	}
 	
-	public void propager() throws RemoteException{
-		try{
-			int i = 0;
-			Transfert[] tFils = new Transfert[this.children.size()];
+	
+	/**
+	 * Propage le message du site vers ses fils.
+	 * @throws RemoteException
+	 * @throws TransfertException
+	 */
+	public void propager() throws RemoteException, TransfertException{
+		int i = 0;
+		Transfert[] tFils = new Transfert[this.children.size()];
 			
-			Iterator<SiteItf> it = this.children.iterator();
+		Iterator<SiteItf> it = this.children.iterator();
 			
-			while(it.hasNext())
-				tFils[i++] = new Transfert(this, it.next());
+		while(it.hasNext())
+			tFils[i++] = new Transfert(this, it.next());
 			
-			for(i=0; i<this.children.size();i++){
-				tFils[i].start();
-			}
-			
-			for(i=0; i<this.children.size();i++){
-				tFils[i].join();
-			}
-			System.out.println("Propagation vers les fils terminée.");
-		}catch(NullPointerException e){
-			System.out.println(this.id +" n'a aucun fils.");
-		}catch(Exception e){
-			e.printStackTrace();
+		for(i=0; i<this.children.size();i++){
+			tFils[i].start();
 		}
+			
+		for(i=0; i<this.children.size();i++){
+			try {
+				tFils[i].join();
+			} catch (InterruptedException e) {
+				throw new TransfertException();
+			}
+		}
+		System.out.println("Propagation vers les fils terminée.");
 		
 	}
 	
-	public static void main(String[] args){
-		try{
-			/*SiteImpl root = new SiteImpl();
-			root.setId();
-			
-			SiteImpl s2 = new SiteImpl();
-			s2.setId();
-			
-			SiteImpl s3 = new SiteImpl();
-			s3.setId();
-			
-			SiteImpl s4 = new SiteImpl();
-			s4.setId();
-			
-			SiteImpl s5 = new SiteImpl();
-			s5.setId();
-			
-			SiteImpl s6 = new SiteImpl();
-			s6.setId();
-			
-			s5.setFils(new SiteImpl[]{s6});
-			
-			s2.setFils(new SiteImpl[]{s3, s4});
-			
-			root.setFils(new SiteImpl[]{s2, s5});
-			
-			root.setData("le fameux message".getBytes());
-			root.propager();*/
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		
-	}
 }

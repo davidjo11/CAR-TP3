@@ -26,7 +26,7 @@ public interface SiteItf extends Remote{
 	 * @throws RemoteException
 	 * @throws TransfertException 
 	 */
-	public void propagerMessageAuxVoisins(byte[] data) throws RemoteException,TransfertException ;
+	public void propagerMessageAuxVoisins() throws RemoteException,TransfertException ;
 	
 	/**
 	 * Modifie le message reçu par le site actuel.
@@ -35,7 +35,7 @@ public interface SiteItf extends Remote{
 	public void setData(byte[] message) throws RemoteException;
 	
 	/**
-	 * Ajoute un lien entre le site actuel et un autre site spécifié.
+	 * Ajoute un voisin au site actuel.
 	 * @param voisin le site a connecter au site actuel
 	 * @throws RemoteException
 	 */

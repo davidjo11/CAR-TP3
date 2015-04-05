@@ -7,6 +7,11 @@ import org.junit.Test;
 import site.graphe.SiteImpl;
 import site.graphe.SiteItf;
 
+/**
+ * Classe de tests.
+ * @author David JOSIAS et Thibaud VERBAERE
+ *
+ */
 public class SiteTests {
 
 	SiteItf s1;
@@ -16,6 +21,9 @@ public class SiteTests {
 	SiteItf s5;
 	SiteItf s6;
 	
+	/**
+	 * Initialisation des sites.
+	 */
 	@Before
 	public void setUp() {
 		try {
@@ -31,10 +39,18 @@ public class SiteTests {
 			
 			s2.ajouterVoisin(s3);
 			s2.ajouterVoisin(s4);
+			s2.ajouterVoisin(s1);
 			
 			s3.ajouterVoisin(s4);
+			s3.ajouterVoisin(s2);
+			
+			s4.ajouterVoisin(s2);
+			s4.ajouterVoisin(s3);
 			
 			s5.ajouterVoisin(s6);
+			s5.ajouterVoisin(s1);
+			
+			s6.ajouterVoisin(s5);
 		}
 		catch (Exception e) {
 			// Ignore
@@ -42,6 +58,10 @@ public class SiteTests {
 	}
 	
 	
+	/**
+	 * Test envoi d'un message depuis la racine : le site 1
+	 * Tout les sites doivent avoir reçu le message.
+	 */
 	@Test
 	public void BonDeroulementTest() {
 		
@@ -61,6 +81,35 @@ public class SiteTests {
 		
 	}
 	
+	
+	/**
+	 * Test envoi d'un message depuis un site quelconque : le site 6
+	 * Tout les sites doivent avoir reçu le message.
+	 */
+	@Test
+	public void AutreSensTest() {
+		
+		try {
+			s6.envoyerMessage("Test".getBytes());
+			
+			assertTrue(s1.isVisited());
+			assertTrue(s2.isVisited());
+			assertTrue(s3.isVisited());
+			assertTrue(s4.isVisited());
+			assertTrue(s5.isVisited());
+			assertTrue(s6.isVisited());
+		}
+		catch (Exception e) {
+			//Ignore
+		}
+		
+	}
+	
+	
+	/**
+	 * Test envoi d'un message après réinitialisation.
+	 * On doit ainsi pouvoir effectuer des envois à la chaine.
+	 */
 	@After
 	public void DeroulementSuccessifTest() {
 

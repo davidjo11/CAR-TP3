@@ -1,11 +1,19 @@
 package site.arbre.client;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import site.arbre.SiteItf;
 import site.utils.Tools;
+import site.utils.TransfertException;
 
+/**
+ * Créé un client RMI (pour les arbres).
+ * @author David JOSIAS et Thibaud VERBAERE
+ *
+ */
 public class Client {
 
 	/*
@@ -13,38 +21,34 @@ public class Client {
 	 * 1 - (OBLIGATOIRE) le port du site racine (depuis lequel le client souhaite propager le message)
 	 * 2 - (optionnel) le message à propager
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public static void main(String[] args) throws RemoteException, TransfertException, NotBoundException {
 
-		try{
-			int port;
+		int port;
 
-			String message;
+		String message;
 
-			Registry registry;
+		Registry registry;
 			
-			if(args[0] != null){
-				port = Integer.parseInt(args[0]);
-				if(args.length > 1)
-					message = args[1];
-				else message = "Le fameux message.";
-			}
-			else{
+		if(args[0] != null){
+			port = Integer.parseInt(args[0]);
+			if(args.length > 1)
+				message = args[1];
+			else
 				message = "Le fameux message.";
-				port = Registry.REGISTRY_PORT;
-			}
-
-			registry = LocateRegistry.getRegistry(port);
-
-			SiteItf s = (SiteItf) registry.lookup(Tools.SITE_NAME);
-
-			s.setData(message.getBytes());
-
-			s.propager();
-
-		}catch(Exception e){
-			e.printStackTrace();
 		}
+		else {
+			message = "Le fameux message.";
+			port = Registry.REGISTRY_PORT;
+		}
+
+		// On récupère le site source
+		registry = LocateRegistry.getRegistry(port);
+		SiteItf s = (SiteItf) registry.lookup(Tools.SITE_NAME);
+
+		// On transfert au site le message
+		s.setData(message.getBytes());
+		s.propager();
+
 	}
 
 }

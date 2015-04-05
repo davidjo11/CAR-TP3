@@ -9,7 +9,7 @@ import site.utils.TransfertException;
 
 
 /**
- * Classe de création de Site.
+ * Classe de création de Site (pour un graphe).
  * @author David JOSIAS et Thibaud VERBAERE
  *
  */
@@ -51,12 +51,11 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	}
 
 	/**
-	 * Ajoute un lien entre le site actuel et un autre site spécifié.
+	 * Ajoute un voisin au site actuel.
 	 * @param voisin le site a connecter au site actuel
 	 */
 	public void ajouterVoisin(SiteItf voisin) throws RemoteException{
 		this.voisins.add(voisin);
-		//voisin.ajouterVoisin(this);
 	}
 
 	/**
@@ -110,8 +109,9 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 				
 			System.out.println(this.id + " a reçu le message : "+ new String(data));
 			
+			// On propage le message aux voisins
 			synchronized(this) {
-				this.propagerMessageAuxVoisins(data);
+				this.propagerMessageAuxVoisins();
 			}
 			
 			System.out.println("Fin des envois aux voisins.");
@@ -124,13 +124,13 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	 * @param donnees le message a transferer
 	 * @throws TransfertException 
 	 */
-	public void propagerMessageAuxVoisins(byte[] data) throws RemoteException, TransfertException{
+	public void propagerMessageAuxVoisins() throws RemoteException, TransfertException{
 		List<Transfert> transferts = new ArrayList<Transfert>();
 		
 		// Création et lancement des threads de transfert.
 		synchronized(this.voisins) {
 			for (int i=0; i < this.voisins.size(); i++) {
-				Transfert transf = new Transfert(data,this.voisins.get(i));
+				Transfert transf = new Transfert(this.data,this.voisins.get(i));
 				transferts.add(transf);
 				transf.start();
 			}
@@ -154,8 +154,10 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	 * Réinitialise le graphe afin de le réutiliser.
 	 */
 	public void reset() throws RemoteException {
+		// On réinitialise le site.
 		this.data = null;
 		this.visited = false;
+		// On réinitialise les autres sites voisins.
 		for (SiteItf site : this.voisins) {
 			if (site.isVisited())
 				site.reset();
