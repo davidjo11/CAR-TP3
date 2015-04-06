@@ -20,6 +20,7 @@ public class Serveur {
 	 * Paramètres possibles:
 	 * 1 - (OBLIGATOIRE) le numéro de port du serveur 
 	 * 2 - (OBLIGATOIRE) le nom du site (à mettre entre guillemets)
+	 * 
 	 * 3 - (optionnel) les numéros des ports voisins (séparés par des virgules, Ex: 4001,4004,56132,6541,65156)
 	 */
 	public static void main(String[] args) throws RemoteException, NotBoundException {
