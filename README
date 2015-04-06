@@ -1,19 +1,36 @@
 BINÔME: VERBAERE - JOSIAS
 
-Notes:
-- 1 serveur = 1 terminal.
+
+POUR LES ARBRES:
 
 Pour lancer les serveurs une fois dans le répertoire bin, tapez:
 
-	java site.main.Serveur -classpath ../lib:. [port] [name] [portPere]
+	java -classpath ../lib:. site.graphe.serveur.Serveur [port] [name] [portPere]
 
 	- port (obligatoire)  : le port associé au site;
-	- name (obligatoire)  : le nom du site;
-	- portPere (optionnel): le port du site pere.
+	- name (obligatoire)  : le nom du site (à mettre entre guillemets au cas où vous mettez des espaces);
+	- portPere (optionnel): le port du père.
 
-Pour lancer le client, tapez:
-	
-	java -classpath ../lib:. [port] [message]
+Pour lancer le client, une fois dans le répertoire bin, tapez:
+
+	java -classpath ../lib:. site.graphe.client.Client [port] [message]
 
 	- port  (obligatoire): le port du site à partir duquel vous voulez envoyer le message
-	- message (optionnel): le message à propager.
+	- message (optionnel): le message à propager (valeur par défaut: "Le fameux message").
+	
+POUR LES GRAPHES:
+
+Pour lancer les serveurs une fois dans le répertoire bin, tapez:
+
+	java -classpath ../lib:. site.graphe.serveur.Serveur [port] [name] [portVoisins]
+
+	- port (obligatoire)  : le port associé au site;
+	- name (obligatoire)  : le nom du site (à mettre entre guillemets au cas où vous mettez des espaces);
+	- portPere (optionnel): les ports des voisins séparés par des virgules et sans espaces.
+
+Pour lancer le client, une fois dans le répertoire bin, tapez:
+
+	java -classpath ../lib:. site.graphe.client.Client [port] [message]
+
+	- port  (obligatoire): le port du site à partir duquel vous voulez envoyer le message
+	- message (optionnel): le message à propager (valeur par défaut: "Le fameux message").
