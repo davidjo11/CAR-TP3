@@ -24,30 +24,35 @@ public class Serveur {
 	 */
 	public static void main(String[] args) throws RemoteException, NotBoundException {
 
-		// On récupère le port passé en argument.
-		int port = Integer.parseInt(args[0]);
-		// On créé le site avec le port.
-		SiteImpl site = new SiteImpl(args[1]);
-		// On créé un registre.
-		Registry registry = LocateRegistry.createRegistry(port);
-		registry.rebind(Tools.SITE_NAME, site);
-
-		System.out.println("Server "+ site.getId() +" created!");
-
-		// Si on a plus de 2 arguments c'est que l'on souhaite ajouter des voisins.
-		if(args.length > 2){
-			// On récupère l'ensemble des ports voisins qui sont séparés par une virgule.
-			String[] ports = args[2].split(",");
-
-			// On créé les liens entre sites pour chacun des voisins
-			for(int i=0; i<ports.length; i++){
-				registry = LocateRegistry.getRegistry(Integer.parseInt(ports[i]));
-
-				SiteItf voisin = (SiteItf) registry.lookup(Tools.SITE_NAME);
-
-				voisin.ajouterVoisin(site);
-				site.ajouterVoisin(voisin);
+		if (args.length >= 2) {
+			// On récupère le port passé en argument.
+			int port = Integer.parseInt(args[0]);
+			// On créé le site avec le port.
+			SiteImpl site = new SiteImpl(args[1]);
+			// On créé un registre.
+			Registry registry = LocateRegistry.createRegistry(port);
+			registry.rebind(Tools.SITE_NAME, site);
+	
+			System.out.println("Server "+ site.getId() +" created!");
+	
+			// Si on a plus de 2 arguments c'est que l'on souhaite ajouter des voisins.
+			if(args.length > 2){
+				// On récupère l'ensemble des ports voisins qui sont séparés par une virgule.
+				String[] ports = args[2].split(",");
+	
+				// On créé les liens entre sites pour chacun des voisins
+				for(int i=0; i<ports.length; i++){
+					registry = LocateRegistry.getRegistry(Integer.parseInt(ports[i]));
+	
+					SiteItf voisin = (SiteItf) registry.lookup(Tools.SITE_NAME);
+	
+					voisin.ajouterVoisin(site);
+					site.ajouterVoisin(voisin);
+				}
 			}
+		}
+		else {
+			Tools.usageGrapheServeur();
 		}
 
 	}

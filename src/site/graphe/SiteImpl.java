@@ -102,17 +102,16 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	public void envoyerMessage(byte[] data) throws RemoteException, TransfertException {
 		// Le message est transferé uniquement s'il n'a pas déjà été envoyé
 		if(!this.visited) {
-			// on passe visited a true
-			this.visited = true;
-			// on garde en mémorie les données
-			this.data = data;
-				
+			synchronized(this) {
+				// on passe visited a true
+				this.visited = true;
+				// on garde en mémorie les données
+				this.data = data;
+			}
 			System.out.println(this.id + " a reçu le message : "+ new String(data));
 			
 			// On propage le message aux voisins
-			synchronized(this) {
-				this.propagerMessageAuxVoisins();
-			}
+			this.propagerMessageAuxVoisins();
 			
 			System.out.println("Fin des envois aux voisins.");
 			
@@ -128,23 +127,18 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 		List<Transfert> transferts = new ArrayList<Transfert>();
 		
 		// Création et lancement des threads de transfert.
-		synchronized(this.voisins) {
-			for (int i=0; i < this.voisins.size(); i++) {
-				Transfert transf = new Transfert(this.data,this.voisins.get(i));
-				transferts.add(transf);
-				transf.start();
-			}
+		for (int i=0; i < this.voisins.size(); i++) {
+			Transfert transf = new Transfert(this.data,this.voisins.get(i));
+			transferts.add(transf);
+			transf.start();
 		}
 		
 		// On attends la fin des threads.
-		synchronized(this.voisins) {
-			for (int i=0; i < transferts.size(); i++) {
-				try {
-					transferts.get(i).join();
-				} catch (InterruptedException e) {
-					throw new TransfertException();
-				}
-
+		for (int i=0; i < transferts.size(); i++) {
+			try {
+				transferts.get(i).join();
+			} catch (InterruptedException e) {
+				throw new TransfertException();
 			}
 		}
 		
@@ -155,8 +149,10 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	 */
 	public void reset() throws RemoteException {
 		// On réinitialise le site.
-		this.data = null;
-		this.visited = false;
+		synchronized(this) {
+			this.data = null;
+			this.visited = false;
+		}
 		// On réinitialise les autres sites voisins.
 		for (SiteItf site : this.voisins) {
 			if (site.isVisited())

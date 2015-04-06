@@ -24,26 +24,31 @@ public class Serveur {
 	 */
 	public static void main(String[] args) throws RemoteException, NotBoundException {
 
-		// On récupère le port passé en argument.
-		int port = Integer.parseInt(args[0]);
-		// On créé le site avec le port.
-		SiteImpl site = new SiteImpl(args[1]);
-		// On créé un registre.
-		Registry registry = LocateRegistry.createRegistry(port);
-		registry.rebind(Tools.SITE_NAME, site);
-
-		System.out.println("Server "+ site.getId() +" created!");
-
-		// Si on a plus de 2 arguments c'est que l'on souhaite ajouter des voisins.
-		if(args.length > 2){
-			// On récupère l'ensemble des ports voisins qui sont séparés par une virgule.
-			registry = LocateRegistry.getRegistry(Integer.parseInt(args[2]));
-			SiteItf pere = (SiteItf) registry.lookup(Tools.SITE_NAME);
-			
-			// On ajoute le fils au père
-			pere.ajouterFils(site);
-			// On ajoute le père au fils
-			site.setPere(pere);
+		if (args.length >= 2) {
+			// On récupère le port passé en argument.
+			int port = Integer.parseInt(args[0]);
+			// On créé le site avec le port.
+			SiteImpl site = new SiteImpl(args[1]);
+			// On créé un registre.
+			Registry registry = LocateRegistry.createRegistry(port);
+			registry.rebind(Tools.SITE_NAME, site);
+	
+			System.out.println("Server "+ site.getId() +" created!");
+	
+			// Si on a plus de 2 arguments c'est que l'on souhaite ajouter des voisins.
+			if(args.length > 2){
+				// On récupère l'ensemble des ports voisins qui sont séparés par une virgule.
+				registry = LocateRegistry.getRegistry(Integer.parseInt(args[2]));
+				SiteItf pere = (SiteItf) registry.lookup(Tools.SITE_NAME);
+				
+				// On ajoute le fils au père
+				pere.ajouterFils(site);
+				// On ajoute le père au fils
+				site.setPere(pere);
+			}
+		}
+		else {
+			Tools.usageArbreServeur();
 		}
 	}
 }
