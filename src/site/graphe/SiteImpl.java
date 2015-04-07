@@ -22,10 +22,9 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	private List<SiteItf> voisins;
 	// ID du site actuel
 	private String id;
-	// True : le site a déja reçu le message, False sinon
-	private boolean visited;
-	// Message reçu
-	private byte[] data;
+	//Liste de message contenant l'ensemble des données reçues.
+	private List<String> dataList;
+
 
 	/**
 	 * Constructeur pour un site par défaut.
@@ -34,7 +33,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	public SiteImpl() throws RemoteException{
 		super();
 		this.voisins = new ArrayList<SiteItf>();
-		this.visited = false;
+		this.dataList = new ArrayList<String>();
 		this.id = ID_DEFAULT;
 	}
 
@@ -46,7 +45,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	public SiteImpl(String id) throws RemoteException{
 		super();
 		this.voisins = new ArrayList<SiteItf>();
-		this.visited = false;
+		this.dataList = new ArrayList<String>();
 		this.id = id;
 	}
 
@@ -73,25 +72,19 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 		return this.id;
 	}
 
-	/**
-	 * Retourne le message reçu par le site actuel.
-	 */
-	public byte[] getData() throws RemoteException{
-		return this.data;
-	}
 
 	/**
-	 * Modifie le message reçu par le site actuel.
+	 * Ajoute le message reçu par le site actuel à la liste de données.
 	 */
-	public void setData(byte[] data){
-		this.data = data;
+	public void setData(byte[] data) throws RemoteException{
+		this.dataList.add(new String(data));
 	}
-
+	
 	/**
-	 * Teste si le site a été visité.
+	 * Retourne la liste des données reçue par le site.
 	 */
-	public boolean isVisited() throws RemoteException{
-		return this.visited;
+	public List<String> getDatas() throws RemoteException{
+		return this.dataList;
 	}
 
 	/**
@@ -101,17 +94,15 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	 */
 	public void envoyerMessage(byte[] data) throws RemoteException, TransfertException {
 		// Le message est transferé uniquement s'il n'a pas déjà été envoyé
-		if(!this.visited) {
+		if(!this.dataList.contains(new String(data))) {
 			synchronized(this) {
-				// on passe visited a true
-				this.visited = true;
 				// on garde en mémorie les données
-				this.data = data;
+				this.dataList.add(new String(data));
 			}
 			System.out.println(this.id + " a reçu le message : "+ new String(data));
 			
 			// On propage le message aux voisins
-			this.propagerMessageAuxVoisins();
+			this.propagerMessageAuxVoisins(data);
 			
 			System.out.println("Fin des envois aux voisins.");
 			
@@ -123,12 +114,12 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	 * @param donnees le message a transferer
 	 * @throws TransfertException 
 	 */
-	public void propagerMessageAuxVoisins() throws RemoteException, TransfertException{
+	public void propagerMessageAuxVoisins(byte[] data) throws RemoteException, TransfertException{
 		List<Transfert> transferts = new ArrayList<Transfert>();
 		
 		// Création et lancement des threads de transfert.
 		for (int i=0; i < this.voisins.size(); i++) {
-			Transfert transf = new Transfert(this.data,this.voisins.get(i));
+			Transfert transf = new Transfert(data,this.voisins.get(i));
 			transferts.add(transf);
 			transf.start();
 		}
@@ -150,12 +141,11 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	public void reset() throws RemoteException {
 		// On réinitialise le site.
 		synchronized(this) {
-			this.data = null;
-			this.visited = false;
+			this.dataList = new ArrayList<String>();
 		}
 		// On réinitialise les autres sites voisins.
 		for (SiteItf site : this.voisins) {
-			if (site.isVisited())
+			if (!site.getDatas().isEmpty())
 				site.reset();
 		}
 	}

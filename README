@@ -33,3 +33,10 @@ Pour lancer le client, une fois dans le répertoire bin, tapez:
 
 	- port  (obligatoire): le port du site à partir duquel vous voulez envoyer le message
 	- message (optionnel): le message à propager (valeur par défaut: "Le fameux message").
+	
+
+============================================================
+
+EXPLIQUER LE SERVERGENERATOR.
+
+============================================================

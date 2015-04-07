@@ -2,6 +2,7 @@ package site.graphe;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 import site.utils.TransfertException;
 
@@ -26,7 +27,7 @@ public interface SiteItf extends Remote{
 	 * @throws RemoteException
 	 * @throws TransfertException 
 	 */
-	public void propagerMessageAuxVoisins() throws RemoteException,TransfertException ;
+	public void propagerMessageAuxVoisins(byte[] data) throws RemoteException,TransfertException ;
 	
 	/**
 	 * Modifie le message reçu par le site actuel.
@@ -42,27 +43,22 @@ public interface SiteItf extends Remote{
 	public void ajouterVoisin(SiteItf voisin) throws RemoteException;
 	
 	/**
-	 * Retourne le message reçu par le site actuel.
-	 * @throws RemoteException
-	 */
-	public byte[] getData() throws RemoteException;
-	
-	/**
 	 * Retourne l'identifiant du site actuel.
 	 * @throws RemoteException
 	 */
 	public String getId() throws RemoteException;
 	
 	/**
-	 * Teste si le site a été visité.
-	 * @throws RemoteException
-	 */
-	public boolean isVisited() throws RemoteException;
-	
-	/**
 	 * Réinitialise le graphe afin de le réutiliser.
 	 * @throws RemoteException
 	 */
 	public void reset() throws RemoteException;
+	
+	/**
+	 * Retourne la liste des données reçue par le site.
+	 * @return les données
+	 * @throws RemoteException
+	 */
+	public List<String> getDatas() throws RemoteException;
 }
 

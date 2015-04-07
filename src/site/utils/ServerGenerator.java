@@ -73,6 +73,9 @@ public class ServerGenerator {
 					if(type.equals("graphe")){
 						//On prend un nombre de voisins au hasard.
 						aux = new Random().nextInt(alreadyCreatedServers.size());
+						if(aux == 0){
+							aux = 1;
+						}
 						for(int j=0;j<aux;j++){
 							int aux2 = new Random().nextInt(alreadyCreatedServers.size());
 							if(j!=0)
@@ -81,7 +84,7 @@ public class ServerGenerator {
 							alreadyCreatedServers.remove(aux2);
 						}
 						//On replace les serveurs qui plausiblement été retirés de la liste 2 lignes plus haut.
-						alreadyCreatedServers = Arrays.asList(auxPorts);
+						alreadyCreatedServers = new ArrayList<Integer>(Arrays.asList(auxPorts));
 					}
 				//Pour un arbre, on met un port ou rien.
 					else {
