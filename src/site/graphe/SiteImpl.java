@@ -140,12 +140,13 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	 */
 	public void reset(byte[] data) throws RemoteException {
 		// On réinitialise le site.
+		String a_enlever = new String(data);
 		synchronized(this) {
-			this.dataList.remove(new String(data));
+			this.dataList.remove(a_enlever);
 		}
 		// On réinitialise les autres sites voisins.
 		for (SiteItf site : this.voisins) {
-			if (!site.getDatas().isEmpty())
+			if (site.getDatas().contains(a_enlever))
 				site.reset(data);
 		}
 	}

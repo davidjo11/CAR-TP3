@@ -68,43 +68,28 @@ public class SiteTests {
 		try {
 			s1.envoyerMessage("Test".getBytes());
 			
-			assertTrue(s1.isVisited());
-			assertTrue(s2.isVisited());
-			assertTrue(s3.isVisited());
-			assertTrue(s4.isVisited());
-			assertTrue(s5.isVisited());
-			assertTrue(s6.isVisited());
-		}
-		catch (Exception e) {
-			//Ignore
-		}
-		
-	}
-	
-	
-	/**
-	 * Test envoi d'un message depuis un site quelconque : le site 6
-	 * Tout les sites doivent avoir reçu le message.
-	 */
-	@Test
-	public void AutreSensTest() {
-		
-		try {
-			s6.envoyerMessage("Test".getBytes());
+			s6.envoyerMessage("Test2".getBytes());
 			
-			assertTrue(s1.isVisited());
-			assertTrue(s2.isVisited());
-			assertTrue(s3.isVisited());
-			assertTrue(s4.isVisited());
-			assertTrue(s5.isVisited());
-			assertTrue(s6.isVisited());
+			assertTrue(s1.getDatas().contains("Test"));
+			assertTrue(s2.getDatas().contains("Test"));
+			assertTrue(s3.getDatas().contains("Test"));
+			assertTrue(s4.getDatas().contains("Test"));
+			assertTrue(s5.getDatas().contains("Test"));
+			assertTrue(s6.getDatas().contains("Test"));
+			
+			assertTrue(s1.getDatas().contains("Test2"));
+			assertTrue(s2.getDatas().contains("Test2"));
+			assertTrue(s3.getDatas().contains("Test2"));
+			assertTrue(s4.getDatas().contains("Test2"));
+			assertTrue(s5.getDatas().contains("Test2"));
+			assertTrue(s6.getDatas().contains("Test2"));
 		}
 		catch (Exception e) {
 			//Ignore
 		}
 		
 	}
-	
+		
 	
 	/**
 	 * Test envoi d'un message après réinitialisation.
@@ -114,23 +99,24 @@ public class SiteTests {
 	public void DeroulementSuccessifTest() {
 
 		try {
-			s1.reset();
+			s1.reset("Test".getBytes());
+			s1.reset("Test2".getBytes());
 			
-			assertFalse(s1.isVisited());
-			assertFalse(s2.isVisited());
-			assertFalse(s3.isVisited());
-			assertFalse(s4.isVisited());
-			assertFalse(s5.isVisited());
-			assertFalse(s6.isVisited());
+			assertTrue(s1.getDatas().isEmpty());
+			assertTrue(s1.getDatas().isEmpty());
+			assertTrue(s1.getDatas().isEmpty());
+			assertTrue(s1.getDatas().isEmpty());
+			assertTrue(s1.getDatas().isEmpty());
+			assertTrue(s1.getDatas().isEmpty());
 			
 			s1.envoyerMessage("Test".getBytes());
 			
-			assertTrue(s1.isVisited());
-			assertTrue(s2.isVisited());
-			assertTrue(s3.isVisited());
-			assertTrue(s4.isVisited());
-			assertTrue(s5.isVisited());
-			assertTrue(s6.isVisited());
+			assertTrue(s1.getDatas().contains("Test"));
+			assertTrue(s2.getDatas().contains("Test"));
+			assertTrue(s3.getDatas().contains("Test"));
+			assertTrue(s4.getDatas().contains("Test"));
+			assertTrue(s5.getDatas().contains("Test"));
+			assertTrue(s6.getDatas().contains("Test"));
 		}
 		catch (Exception e) {
 			//Ignore
