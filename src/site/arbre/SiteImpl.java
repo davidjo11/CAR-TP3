@@ -59,7 +59,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	
 	/**
 	 * Fixe le père du site actuel.
-	 * @param message
+	 * @param pere le pere du site
 	 * @throws RemoteException
 	 */
 	public void setPere(SiteItf pere) throws RemoteException{

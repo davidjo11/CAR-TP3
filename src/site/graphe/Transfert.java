@@ -15,8 +15,7 @@ public class Transfert extends Thread{
 	/**
 	 * Constructeur
 	 * @param data le message a envoyer.
-	 * @param pere le site source
-	 * @param fils le site destination
+	 * @param recepteur le site source
 	 */
 	public Transfert(byte[] data,SiteItf recepteur){
 		this.recepteur = recepteur;

@@ -15,7 +15,7 @@ public interface SiteItf extends Remote{
 	
 	/**
 	 * Transmet un message à un site.
-	 * @param donnees le message a envoyer
+	 * @param data le message a envoyer
 	 * @throws RemoteException
 	 * @throws TransfertException 
 	 */
@@ -23,7 +23,7 @@ public interface SiteItf extends Remote{
 
 	/**
 	 * Propage le message donné en paramètre aux voisins du site actuel.
-	 * @param donnees le message a transferer
+	 * @param data le message a transferer
 	 * @throws RemoteException
 	 * @throws TransfertException 
 	 */

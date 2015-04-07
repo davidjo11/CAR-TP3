@@ -89,7 +89,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 
 	/**
 	 * Transmet un message à un site.
-	 * @param donnees le message a envoyer
+	 * @param data le message a envoyer
 	 * @throws TransfertException 
 	 */
 	public void envoyerMessage(byte[] data) throws RemoteException, TransfertException {
@@ -112,7 +112,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	
 	/**
 	 * Propage le message donné en paramètre aux voisins du site actuel.
-	 * @param donnees le message a transferer
+	 * @param data le message a transferer
 	 * @throws TransfertException 
 	 */
 	public void propagerMessageAuxVoisins(byte[] data) throws RemoteException, TransfertException{

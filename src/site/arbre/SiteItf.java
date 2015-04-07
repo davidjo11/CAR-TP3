@@ -34,7 +34,7 @@ public interface SiteItf extends Remote{
 	
 	/**
 	 * Fixe le père du site actuel.
-	 * @param message
+	 * @param pere le pere du site
 	 * @throws RemoteException
 	 */
 	public void setPere(SiteItf pere) throws RemoteException;
