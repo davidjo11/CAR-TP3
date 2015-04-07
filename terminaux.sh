@@ -10,4 +10,3 @@ xterm -geometry "40x10+260+20" -title "Noeud n°1 - port 4004" -e java site.main
 sleep 0.05;
 xterm -geometry "40x10+320+20" -title "Noeud n°1 - port 4005" -e java site.main.Serveur 4005 &
 sleep 0.05;
-
