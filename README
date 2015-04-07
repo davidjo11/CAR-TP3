@@ -79,10 +79,34 @@ choses :
 Pourquoi une liste de données ?
 C'est un choix d'implémentation ! Nous avons pensé qu'il serait mieux pour la concurrence d'utiliser un tel
 système plutôt qu'un booléen est_visité.
-Avec la liste, si l'on envoi deux messages en même temps à des sites différents nous pouvons alors diffuser les
+Avec la liste, si l'on envoie deux messages en même temps à des sites différents nous pouvons alors diffuser les
 deux messages pour chaque site. Avec le booléen chaque site recevrait un seul des messages.
 Après chaque envoi, le message envoyé est retiré de la liste de tout site, ainsi le même message peut être ré-
 envoyé une nouvelle fois.
+
+
+------------------------
+--Structure arbitraire--
+------------------------
+Nous avons créé un générateur de script permettant de lancer des différents serveurs, chacun dans un terminal et associé à
+un port.
+Ainsi pour générer le script de lancement des serveurs, utilisez le fichier ServerGen.jar en renseignant les paramètres suivants:
+1 - le nombre de serveurs à créer
+2 - le type de la structure (-g pour un graphe, -a pour un arbre)
+3 - les numéros des ports en séparant les numéros par des virgules et sans aucun espace.
+
+Partie implémentation:
+
+Brièvement, une fois les arguments récupérés, nous créons un serveur racine sans aucun voisin ou père.
+Ensuite, pour créer le serveur n°i, nous prenons un nombre aléatoire x pour compris entre 0 et le nombre de serveurs créés jusqu'à
+maintenant, c'est-à-dire i-1 serveurs pour:
+	- dans le cas d'un graphe, ajouter x voisins au serveur en les choisissant au hasard;
+	- dans le cas d'un arbre, ajouter le serveur en position x dans la liste contenant les i-1 serveurs créés jusqu'à maintenant.
+
+Une fois, la structure terminée nous obtenons un fichier nommé launchServer.sh à la racine du projet.
+
+Tout cela a été fait dans la classe site.utils.ServerGenerator.
+
 
 ------------------------
 -------Les Tests--------
