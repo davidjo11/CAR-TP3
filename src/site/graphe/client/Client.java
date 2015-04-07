@@ -49,7 +49,7 @@ public class Client {
 		s.envoyerMessage(message.getBytes());
 		// Une fois l'envoi effectué on réinitialise l'état des sites pour
 		// Une eventuelle réutilisation
-		s.reset();
+		s.reset(message.getBytes());
 
 	}
 

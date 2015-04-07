@@ -50,9 +50,10 @@ public interface SiteItf extends Remote{
 	
 	/**
 	 * Réinitialise le graphe afin de le réutiliser.
+	 * @param data les données a effacer
 	 * @throws RemoteException
 	 */
-	public void reset() throws RemoteException;
+	public void reset(byte[] data) throws RemoteException;
 	
 	/**
 	 * Retourne la liste des données reçue par le site.

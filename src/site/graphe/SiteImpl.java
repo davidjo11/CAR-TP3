@@ -93,20 +93,20 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	 * @throws TransfertException 
 	 */
 	public void envoyerMessage(byte[] data) throws RemoteException, TransfertException {
-		// Le message est transferé uniquement s'il n'a pas déjà été envoyé
-		if(!this.dataList.contains(new String(data))) {
-			synchronized(this) {
-				// on garde en mémorie les données
-				this.dataList.add(new String(data));
-			}
-			System.out.println(this.id + " a reçu le message : "+ new String(data));
-			
-			// On propage le message aux voisins
-			this.propagerMessageAuxVoisins(data);
-			
-			System.out.println("Fin des envois aux voisins.");
-			
+		synchronized(this) {
+			// Le message est transferé uniquement s'il n'a pas déjà été envoyé
+			if(this.dataList.contains(new String(data)))
+				return;
+			// on garde en mémoire les données
+			this.dataList.add(new String(data));
 		}
+		System.out.println(this.id + " a reçu le message : "+ new String(data));
+			
+		// On propage le message aux voisins
+		this.propagerMessageAuxVoisins(data);
+			
+		System.out.println("Fin des envois aux voisins.");
+
 	}
 	
 	/**
@@ -138,15 +138,15 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	/**
 	 * Réinitialise le graphe afin de le réutiliser.
 	 */
-	public void reset() throws RemoteException {
+	public void reset(byte[] data) throws RemoteException {
 		// On réinitialise le site.
 		synchronized(this) {
-			this.dataList = new ArrayList<String>();
+			this.dataList.remove(new String(data));
 		}
 		// On réinitialise les autres sites voisins.
 		for (SiteItf site : this.voisins) {
 			if (!site.getDatas().isEmpty())
-				site.reset();
+				site.reset(data);
 		}
 	}
 

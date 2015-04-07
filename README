@@ -1,7 +1,39 @@
-BINÔME: VERBAERE - JOSIAS
+########################################################################################################
+############################################# TP3 CAR : RMI  ###########################################
+########################################################################################################
 
-POUR LES ARBRES:
+Auteurs : Thibaud VERBAERE & David JOSIAS
 
+------------------------
+------Introduction------
+------------------------
+Le but de TP était de réalisé une application qui permettait de transférer en RMI des données à un
+ensemble de noeud. Il devait être possible de créer des noeuds s'exécutant sur différentes machines
+virtuelles.
+Dans un premier temps nous avons réalisé cette application selon un schéma d'arbre. Dans ce schéma,
+chaque noeud possède un père et des fils. Quand un noeud reçoit un message, il propage alors ce message
+vers ses fils et ainsi de suite.
+Ce premier travail est inclu dans l'archive et organisé ainsi :
+
+-package site.arbre : contient l'interface d'un site, l'implémentation du site selon le schéma d'arbre et
+le une classe Transfert. Cette dernière permet d'envoyer chaque message dans un thread différent.
+
+-package site.arbre.serveur : contient la classe Serveur. C'est cette classe qu'il faut lancer pour créer
+un nouveau site (voir utilisation dans la rubrique consacrée).
+
+-package site.arbre.client : contient la classe Client. C'est avec cette classe qu'on peut envoyer le
+premier message à un des sites et qui sera propagé partout ailleurs (voir utilisation dans la rubrique
+consacrée).
+
+Avec ce schéma, il est par contre impossible d'envoyer un message partout depuis un site feuille (c'est
+à dire un site sans fils). En effet, lors de la propagation, on transmet le message qu'aux fils uniquement.
+C'est pour cela que nous devions ensuite adapter cette application pour un schéma en graphe, pour pouvoir
+faire rayonner le message vers chaque site.
+Ce deuxième travail est organisé de la même façon que pour les arbres.
+
+------------------------
+------Utilisation-------
+------------------------
 Pour lancer les serveurs une fois dans le répertoire bin, tapez:
 
 	java -classpath ../lib:. site.graphe.serveur.Serveur [port] [name] [portPere]
@@ -33,10 +65,20 @@ Pour lancer le client, une fois dans le répertoire bin, tapez:
 
 	- port  (obligatoire): le port du site à partir duquel vous voulez envoyer le message
 	- message (optionnel): le message à propager (valeur par défaut: "Le fameux message").
-	
-
-============================================================
 
 EXPLIQUER LE SERVERGENERATOR.
 
-============================================================
+------------------------
+----Implémentation------
+------------------------
+A FAIRE (Thibaud)
+
+------------------------
+-------Les Tests--------
+------------------------
+A FAIRE (Thibaud)
+
+------------------------
+-------Problèmes--------
+------------------------
+Pas de problèmes pour ce TP.
