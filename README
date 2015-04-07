@@ -71,12 +71,29 @@ EXPLIQUER LE SERVERGENERATOR.
 ------------------------
 ----Implémentation------
 ------------------------
-A FAIRE (Thibaud)
+Pour les graphes, nous avons réutiliser le code pour les arbres. Mais nous avons surtout du modifier certaines
+choses :
+	- Nous avons supprimé la notion de père pour un site, qui n'était plus utile et adaptée pour ce cas.
+	- Chaque site a desormais une liste de voisins et non une liste de fils.
+	- Desormais nous avons une liste de données reçues par le site.
+Pourquoi une liste de données ?
+C'est un choix d'implémentation ! Nous avons pensé qu'il serait mieux pour la concurrence d'utiliser un tel
+système plutôt qu'un booléen est_visité.
+Avec la liste, si l'on envoi deux messages en même temps à des sites différents nous pouvons alors diffuser les
+deux messages pour chaque site. Avec le booléen chaque site recevrait un seul des messages.
+Après chaque envoi, le message envoyé est retiré de la liste de tout site, ainsi le même message peut être ré-
+envoyé une nouvelle fois.
 
 ------------------------
 -------Les Tests--------
 ------------------------
-A FAIRE (Thibaud)
+Nous avons écrit des tests unitaires en JAVA pour vérifier le comportement de notre programme.
+Tout semble correct, que ce soit de l'ajout de voisin ou de la diffusion de message.
+Nous avons également tester la concurrence :
+Vous trouverez deux sh dans le projet :
+Pour tester nous avons lancer concurrence_creer.sh qui créé un anneau de quatre sites. Puis lancer l'autre script
+nommé concurrence_envoyer qui envoit deux messages en simultané. Le résultat est plutôt bon : chaque site a reçu
+les deux messages.
 
 ------------------------
 -------Problèmes--------
