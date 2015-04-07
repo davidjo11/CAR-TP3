@@ -95,8 +95,9 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 	public void envoyerMessage(byte[] data) throws RemoteException, TransfertException {
 		synchronized(this) {
 			// Le message est transferé uniquement s'il n'a pas déjà été envoyé
-			if(this.dataList.contains(new String(data)))
+			if(this.dataList.contains(new String(data))) {
 				return;
+			}
 			// on garde en mémoire les données
 			this.dataList.add(new String(data));
 		}
@@ -119,6 +120,7 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 		
 		// Création et lancement des threads de transfert.
 		for (int i=0; i < this.voisins.size(); i++) {
+			System.out.println("Envoi de "+(new String(data))+" vers "+this.voisins.get(i).getId());
 			Transfert transf = new Transfert(data,this.voisins.get(i));
 			transferts.add(transf);
 			transf.start();
@@ -143,11 +145,11 @@ public class SiteImpl extends UnicastRemoteObject implements SiteItf{
 		String a_enlever = new String(data);
 		synchronized(this) {
 			this.dataList.remove(a_enlever);
-		}
 		// On réinitialise les autres sites voisins.
 		for (SiteItf site : this.voisins) {
 			if (site.getDatas().contains(a_enlever))
 				site.reset(data);
+		}
 		}
 	}
 
